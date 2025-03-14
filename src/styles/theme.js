@@ -1,0 +1,67 @@
+const theme = {
+  colors: {
+    primary: '#586EE0',
+    secondary: '#F5F5F7',
+    accent: '#FF5C35',
+    background: '#FAFAFC',
+    text: '#333333',
+    white: '#FFFFFF',
+    gray: '#ECECEC',
+    darkGray: '#666666',
+    success: '#4CAF50',
+    error: '#F44336',
+    warning: '#FF9800',
+  },
+  fonts: {
+    heading: "'Mark Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    body: "'Lato', sans-serif",
+  },
+  fontSizes: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    md: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem',
+  },
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+    '2xl': '3rem',
+    '3xl': '4rem',
+    '4xl': '6rem',
+  },
+  breakpoints: {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
+    '2xl': '1536px',
+  },
+  shadows: {
+    sm: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
+    md: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
+    lg: '0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05)',
+    xl: '0 20px 40px rgba(0, 0, 0, 0.1)',
+  },
+  borderRadius: {
+    sm: '0.125rem',
+    md: '0.25rem',
+    lg: '0.5rem',
+    xl: '1rem',
+    full: '9999px',
+  },
+  transition: {
+    fast: 'all 0.2s ease',
+    normal: 'all 0.3s ease',
+    slow: 'all 0.5s ease',
+  },
+};
+
+export default theme;
