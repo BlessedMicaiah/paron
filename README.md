@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# Paron - Modern Presentation Tool
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Paron Logo](public/logo192.png)
 
-## Available Scripts
+Paron is a powerful, React-based presentation tool designed to help you create beautiful, engaging presentations with ease. Similar to tools like Pitch, Paron provides a modern, intuitive interface for crafting professional presentations that stand out.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+### 🎨 Modern Design Interface
+- Clean, intuitive user interface
+- Beautiful slide templates
+- Responsive design for all screen sizes
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### ✏️ Rich Content Editing
+- Text formatting (bold, italic, underline)
+- Text alignment options
+- Support for headings, paragraphs, and lists
+- Content blocks for images, videos, and tables
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 📊 Presentation Management
+- Create, edit, and organize presentations
+- Dashboard view of recent and team presentations
+- Duplicate and delete slides
+- Presentation preview
 
-### `npm test`
+### 👥 Team Collaboration
+- Share presentations with team members
+- View team presentations
+- Collaborative editing capabilities
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🎬 Presentation Mode
+- Full-screen presentation mode
+- Presenter notes and controls
+- Seamless transitions between slides
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+- Node.js (v14 or higher)
+- npm (v6 or higher)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/paron.git
+cd paron
+```
 
-### `npm run eject`
+2. Install dependencies:
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Start the development server:
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. Open your browser and navigate to `http://localhost:3000`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Usage
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Creating a New Presentation
+1. Navigate to the Dashboard
+2. Click the "New Presentation" button
+3. Start editing your presentation in the editor
 
-## Learn More
+### Editing Slides
+- Add text by clicking on the slide and typing
+- Format text using the toolbar options
+- Add new slides using the "Add Slide" button
+- Rearrange slides by dragging them in the sidebar
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Presenting
+- Click the "Present" button in the editor to start presentation mode
+- Use arrow keys to navigate between slides
+- Press Escape to exit presentation mode
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Project Structure
 
-### Code Splitting
+```
+paron/
+├── public/              # Static files
+├── src/                 # Source files
+│   ├── assets/          # Images and other assets
+│   ├── components/      # React components
+│   │   ├── common/      # Common UI components
+│   │   ├── dashboard/   # Dashboard components
+│   │   ├── editor/      # Editor components
+│   │   ├── layout/      # Layout components
+│   │   └── slides/      # Slide components
+│   ├── context/         # React context providers
+│   ├── pages/           # Page components
+│   ├── styles/          # Global styles and themes
+│   └── utils/           # Utility functions
+├── package.json         # Dependencies and scripts
+└── README.md            # Project documentation
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Technologies Used
 
-### Analyzing the Bundle Size
+- React.js - Frontend framework
+- React Router - Navigation
+- Styled Components - Styling
+- Material UI Icons - UI elements
+- Framer Motion - Animations
+- React Beautiful DnD - Drag and drop functionality
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Contributing
 
-### Making a Progressive Web App
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### Advanced Configuration
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### Deployment
+## Acknowledgments
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Inspired by modern presentation tools like Pitch and Slides
+- Built with React and modern web technologies
