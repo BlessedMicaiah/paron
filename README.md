@@ -1,6 +1,6 @@
 # Paron - Modern Presentation Tool
 
-![Paron Logo](public/[paron-high-resolution-logo.png])
+![Paron Logo](public/paron-high-resolution-logo.png)
 
 Paron is a powerful, React-based presentation tool designed to help you create beautiful, engaging presentations with ease. Similar to tools like Pitch, Paron provides a modern, intuitive interface for crafting professional presentations that stand out.
 
