@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
@@ -6,32 +6,60 @@ import {
   Slideshow as PresentationsIcon,
   People as TeamIcon, 
   Settings as SettingsIcon,
-  Add
+  Add,
+  ChevronRight,
+  Folder,
+  StarOutline,
+  AccessTime
 } from '@mui/icons-material';
 import theme from '../../styles/theme';
 import { usePresentations } from '../../context/PresentationContext';
 
 const SidebarContainer = styled.div`
-  width: 240px;
+  width: 260px;
   height: 100%;
   background-color: ${theme.colors.white};
   border-right: 1px solid ${theme.colors.gray};
-  padding: ${theme.spacing.md} 0;
+  padding: ${theme.spacing.lg} 0;
   display: flex;
   flex-direction: column;
+  position: relative;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background: ${theme.colors.gray};
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+  }
 `;
 
 const SidebarSection = styled.div`
-  margin-bottom: ${theme.spacing.lg};
+  margin-bottom: ${theme.spacing.xl};
   padding: 0 ${theme.spacing.md};
 `;
 
 const SidebarTitle = styled.h4`
   text-transform: uppercase;
-  color: ${theme.colors.darkGray};
+  color: ${theme.colors.textSecondary};
   font-size: ${theme.fontSizes.xs};
-  margin-bottom: ${theme.spacing.sm};
+  letter-spacing: 1.2px;
+  margin-bottom: ${theme.spacing.md};
   padding: 0 ${theme.spacing.md};
+  display: flex;
+  align-items: center;
+  
+  &:after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: ${theme.colors.gray};
+    margin-left: ${theme.spacing.sm};
+    opacity: 0.6;
+  }
 `;
 
 const NavList = styled.ul`
@@ -47,25 +75,58 @@ const NavItem = styled.li`
 const StyledNavLink = styled(NavLink)`
   display: flex;
   align-items: center;
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  padding: ${theme.spacing.md} ${theme.spacing.md};
   text-decoration: none;
   color: ${theme.colors.text};
   border-radius: ${theme.borderRadius.md};
-  transition: ${theme.transition.fast};
+  transition: ${theme.transition.normal};
+  position: relative;
+  overflow: hidden;
+  
+  svg {
+    margin-right: ${theme.spacing.md};
+    font-size: ${theme.fontSizes.xl};
+    transition: ${theme.transition.normal};
+    color: ${theme.colors.textSecondary};
+  }
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: ${theme.colors.primary};
+    transform: translateX(-100%);
+    transition: ${theme.transition.normal};
+    opacity: 0;
+  }
   
   &:hover {
-    background-color: ${theme.colors.secondary};
+    background-color: rgba(212, 175, 55, 0.05);
+    color: ${theme.colors.primary};
+    
+    svg {
+      color: ${theme.colors.primary};
+      transform: scale(1.1);
+    }
   }
   
   &.active {
-    background-color: ${theme.colors.secondary};
+    background-color: rgba(212, 175, 55, 0.1);
     color: ${theme.colors.primary};
-    font-weight: bold;
-  }
-  
-  svg {
-    margin-right: ${theme.spacing.sm};
-    font-size: ${theme.fontSizes.lg};
+    font-weight: 500;
+    
+    &:before {
+      transform: translateX(0);
+      opacity: 1;
+      box-shadow: ${theme.shadows.gold};
+    }
+    
+    svg {
+      color: ${theme.colors.primary};
+    }
   }
 `;
 
@@ -73,29 +134,57 @@ const CreateButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(100% - ${theme.spacing.lg});
-  margin: 0 ${theme.spacing.md};
-  padding: ${theme.spacing.sm};
-  background-color: ${theme.colors.primary};
+  width: calc(100% - ${theme.spacing.xl});
+  margin: 0 ${theme.spacing.md} ${theme.spacing.xl};
+  padding: ${theme.spacing.md};
+  background: ${theme.colors.gradient.primary};
   color: ${theme.colors.white};
   border: none;
   border-radius: ${theme.borderRadius.md};
   font-family: ${theme.fonts.body};
   font-size: ${theme.fontSizes.md};
+  font-weight: 500;
   cursor: pointer;
+  transition: ${theme.transition.bounce};
+  box-shadow: ${theme.shadows.md};
   
   svg {
-    margin-right: ${theme.spacing.xs};
+    margin-right: ${theme.spacing.sm};
+    transition: ${theme.transition.normal};
   }
   
   &:hover {
-    background-color: #4A5BC3;
+    transform: translateY(-2px);
+    box-shadow: ${theme.shadows.gold};
+    
+    svg {
+      transform: rotate(90deg);
+    }
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+`;
+
+const CategoryTag = styled.span`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  font-size: ${theme.fontSizes.xs};
+  color: ${theme.colors.textSecondary};
+  
+  svg {
+    font-size: ${theme.fontSizes.md} !important;
+    margin-right: 0 !important;
+    margin-left: ${theme.spacing.xs};
   }
 `;
 
 const Sidebar = () => {
   const { addPresentation } = usePresentations();
   const navigate = useNavigate();
+  const [categories] = useState(['Recent', 'Favorites', 'Shared']);
   
   const handleCreateNew = () => {
     const newId = addPresentation({
@@ -108,7 +197,7 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       <SidebarSection>
-        <CreateButton onClick={handleCreateNew}>
+        <CreateButton onClick={handleCreateNew} className="pulse">
           <Add />
           New Presentation
         </CreateButton>
@@ -127,6 +216,28 @@ const Sidebar = () => {
             Presentations
           </StyledNavLink>
         </NavItem>
+      </NavList>
+      
+      <SidebarTitle>Libraries</SidebarTitle>
+      <NavList>
+        {categories.map((category, index) => (
+          <NavItem key={index}>
+            <StyledNavLink to={`/category/${category.toLowerCase()}`}>
+              {category === 'Recent' ? (
+                <AccessTime />
+              ) : category === 'Favorites' ? (
+                <StarOutline />
+              ) : (
+                <Folder />
+              )}
+              {category}
+              <CategoryTag>
+                {Math.floor(Math.random() * 10) + 1}
+                <ChevronRight fontSize="small" />
+              </CategoryTag>
+            </StyledNavLink>
+          </NavItem>
+        ))}
       </NavList>
       
       <SidebarTitle>Workspace</SidebarTitle>
