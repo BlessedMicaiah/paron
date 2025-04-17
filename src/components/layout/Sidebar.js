@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { 
   Dashboard as DashboardIcon,
   Slideshow as PresentationsIcon,
@@ -10,20 +11,24 @@ import {
   ChevronRight,
   Folder,
   StarOutline,
-  AccessTime
+  AccessTime,
+  Search,
+  Upgrade,
+  DarkMode,
+  LightMode
 } from '@mui/icons-material';
-import theme from '../../styles/theme';
-import { usePresentations } from '../../context/PresentationContext';
+import { toggleDarkMode } from '../../store/slices/uiSlice';
 
 const SidebarContainer = styled.div`
   width: 260px;
   height: 100%;
-  background-color: ${theme.colors.white};
-  border-right: 1px solid ${theme.colors.gray};
-  padding: ${theme.spacing.lg} 0;
+  background-color: ${({ theme }) => theme.colors.surface};
+  border-right: 1px solid ${({ theme }) => `rgba(59, 130, 246, 0.1)`};
+  padding: ${({ theme }) => theme.spacing.lg} 0;
   display: flex;
   flex-direction: column;
   position: relative;
+  backdrop-filter: blur(10px);
   
   &:after {
     content: '';
@@ -32,23 +37,23 @@ const SidebarContainer = styled.div`
     right: 0;
     width: 1px;
     height: 100%;
-    background: ${theme.colors.gray};
-    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+    background: ${({ theme }) => theme.colors.gradient.primary};
+    opacity: 0.1;
   }
 `;
 
 const SidebarSection = styled.div`
-  margin-bottom: ${theme.spacing.xl};
-  padding: 0 ${theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  padding: 0 ${({ theme }) => theme.spacing.md};
 `;
 
 const SidebarTitle = styled.h4`
   text-transform: uppercase;
-  color: ${theme.colors.textSecondary};
-  font-size: ${theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
   letter-spacing: 1.2px;
-  margin-bottom: ${theme.spacing.md};
-  padding: 0 ${theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  padding: 0 ${({ theme }) => theme.spacing.md};
   display: flex;
   align-items: center;
   
@@ -56,205 +61,195 @@ const SidebarTitle = styled.h4`
     content: '';
     flex: 1;
     height: 1px;
-    background: ${theme.colors.gray};
-    margin-left: ${theme.spacing.sm};
-    opacity: 0.6;
+    background: ${({ theme }) => theme.colors.gradient.primary};
+    margin-left: ${({ theme }) => theme.spacing.sm};
+    opacity: 0.2;
   }
 `;
 
-const NavList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const NavItem = styled.li`
-  margin-bottom: ${theme.spacing.xs};
-`;
-
-const StyledNavLink = styled(NavLink)`
+const NavItem = styled(NavLink)`
   display: flex;
   align-items: center;
-  padding: ${theme.spacing.md} ${theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
-  color: ${theme.colors.text};
-  border-radius: ${theme.borderRadius.md};
-  transition: ${theme.transition.normal};
-  position: relative;
-  overflow: hidden;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  transition: all 0.2s ease;
   
   svg {
-    margin-right: ${theme.spacing.md};
-    font-size: ${theme.fontSizes.xl};
-    transition: ${theme.transition.normal};
-    color: ${theme.colors.textSecondary};
+    margin-right: ${({ theme }) => theme.spacing.md};
+    color: ${({ theme }) => theme.colors.textSecondary};
   }
   
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: ${theme.colors.primary};
-    transform: translateX(-100%);
-    transition: ${theme.transition.normal};
-    opacity: 0;
-  }
-  
-  &:hover {
-    background-color: rgba(212, 175, 55, 0.05);
-    color: ${theme.colors.primary};
+  &:hover, &.active {
+    background-color: ${({ theme }) => theme.colors.surfaceHover};
     
     svg {
-      color: ${theme.colors.primary};
-      transform: scale(1.1);
+      color: ${({ theme }) => theme.colors.primary};
     }
   }
   
   &.active {
-    background-color: rgba(212, 175, 55, 0.1);
-    color: ${theme.colors.primary};
-    font-weight: 500;
-    
-    &:before {
-      transform: translateX(0);
-      opacity: 1;
-      box-shadow: ${theme.shadows.gold};
-    }
-    
-    svg {
-      color: ${theme.colors.primary};
-    }
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
-const CreateButton = styled.button`
+const ActionButton = styled.button`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: calc(100% - ${theme.spacing.xl});
-  margin: 0 ${theme.spacing.md} ${theme.spacing.xl};
-  padding: ${theme.spacing.md};
-  background: ${theme.colors.gradient.primary};
-  color: ${theme.colors.white};
+  padding: ${({ theme }) => theme.spacing.md};
+  color: ${({ theme }) => theme.colors.text};
+  background: transparent;
   border: none;
-  border-radius: ${theme.borderRadius.md};
-  font-family: ${theme.fonts.body};
-  font-size: ${theme.fontSizes.md};
-  font-weight: 500;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: inherit;
   cursor: pointer;
-  transition: ${theme.transition.bounce};
-  box-shadow: ${theme.shadows.md};
+  transition: all 0.2s ease;
   
   svg {
-    margin-right: ${theme.spacing.sm};
-    transition: ${theme.transition.normal};
+    margin-right: ${({ theme }) => theme.spacing.md};
+    color: ${({ theme }) => theme.colors.textSecondary};
   }
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${theme.shadows.gold};
+    background-color: ${({ theme }) => theme.colors.surfaceHover};
     
     svg {
-      transform: rotate(90deg);
+      color: ${({ theme }) => theme.colors.primary};
     }
-  }
-  
-  &:active {
-    transform: translateY(1px);
   }
 `;
 
-const CategoryTag = styled.span`
+const SearchBox = styled.div`
   display: flex;
   align-items: center;
-  margin-left: auto;
-  font-size: ${theme.fontSizes.xs};
-  color: ${theme.colors.textSecondary};
+  padding: 10px 16px;
+  background-color: ${({ theme }) => theme.colors.surfaceHover};
+  border-radius: 8px;
+  margin: 0 16px 24px 16px;
   
   svg {
-    font-size: ${theme.fontSizes.md} !important;
-    margin-right: 0 !important;
-    margin-left: ${theme.spacing.xs};
+    color: ${({ theme }) => theme.colors.textSecondary};
+    margin-right: 8px;
+  }
+  
+  input {
+    border: none;
+    background: transparent;
+    color: ${({ theme }) => theme.colors.text};
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+    
+    &::placeholder {
+      color: ${({ theme }) => theme.colors.textSecondary};
+    }
+  }
+`;
+
+const UpgradeButton = styled.button`
+  display: flex;
+  align-items: center;
+  margin: 0 16px 24px 16px;
+  padding: 10px 16px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  
+  svg {
+    margin-right: 8px;
+  }
+  
+  &:hover {
+    background-color: ${({ theme }) => `${theme.colors.secondary}`};
+  }
+`;
+
+const ThemeToggle = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px;
+  padding: 12px 16px;
+  background-color: ${({ theme }) => theme.colors.surfaceHover};
+  color: ${({ theme }) => theme.colors.text};
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  
+  svg {
+    color: ${({ theme, $isDark }) => $isDark ? '#ffc107' : theme.colors.primary};
+  }
+  
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.border};
   }
 `;
 
 const Sidebar = () => {
-  const { addPresentation } = usePresentations();
   const navigate = useNavigate();
-  const [categories] = useState(['Recent', 'Favorites', 'Shared']);
-  
-  const handleCreateNew = () => {
-    const newId = addPresentation({
-      title: 'Untitled Presentation',
-      thumbnail: `https://via.placeholder.com/300x200/${theme.colors.primary.replace('#', '')}/FFFFFF?text=New+Presentation`,
-    });
-    navigate(`/editor/${newId}`);
-  };
+  const dispatch = useDispatch();
+  const darkMode = useSelector((state) => state.ui.darkMode);
   
   return (
     <SidebarContainer>
+      <UpgradeButton>
+        <Upgrade fontSize="small" />
+        Upgrade this workspace
+      </UpgradeButton>
+      
+      <SearchBox>
+        <Search fontSize="small" />
+        <input placeholder="Search & commands" />
+      </SearchBox>
+      
       <SidebarSection>
-        <CreateButton onClick={handleCreateNew} className="pulse">
-          <Add />
-          New Presentation
-        </CreateButton>
+        <SidebarTitle>Navigation</SidebarTitle>
+        <NavItem to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
+          <DashboardIcon />
+          Recents
+        </NavItem>
+        <NavItem to="/presentations" className={({ isActive }) => isActive ? 'active' : ''}>
+          <PresentationsIcon />
+          Manage library
+        </NavItem>
+        <NavItem to="/links" className={({ isActive }) => isActive ? 'active' : ''}>
+          <ChevronRight />
+          Links overview
+        </NavItem>
       </SidebarSection>
       
-      <NavList>
-        <NavItem>
-          <StyledNavLink to="/dashboard">
-            <DashboardIcon />
-            Dashboard
-          </StyledNavLink>
+      <SidebarSection>
+        <SidebarTitle>Workspaces</SidebarTitle>
+        <NavItem to="/team" className={({ isActive }) => isActive ? 'active' : ''}>
+          <TeamIcon />
+          Team
         </NavItem>
-        <NavItem>
-          <StyledNavLink to="/presentations">
-            <PresentationsIcon />
-            Presentations
-          </StyledNavLink>
+        <NavItem to="/private" className={({ isActive }) => isActive ? 'active' : ''}>
+          <Folder />
+          Private
         </NavItem>
-      </NavList>
+        <ActionButton>
+          <Add />
+          Create folder
+        </ActionButton>
+      </SidebarSection>
       
-      <SidebarTitle>Libraries</SidebarTitle>
-      <NavList>
-        {categories.map((category, index) => (
-          <NavItem key={index}>
-            <StyledNavLink to={`/category/${category.toLowerCase()}`}>
-              {category === 'Recent' ? (
-                <AccessTime />
-              ) : category === 'Favorites' ? (
-                <StarOutline />
-              ) : (
-                <Folder />
-              )}
-              {category}
-              <CategoryTag>
-                {Math.floor(Math.random() * 10) + 1}
-                <ChevronRight fontSize="small" />
-              </CategoryTag>
-            </StyledNavLink>
-          </NavItem>
-        ))}
-      </NavList>
-      
-      <SidebarTitle>Workspace</SidebarTitle>
-      <NavList>
-        <NavItem>
-          <StyledNavLink to="/team">
-            <TeamIcon />
-            Team
-          </StyledNavLink>
-        </NavItem>
-        <NavItem>
-          <StyledNavLink to="/settings">
-            <SettingsIcon />
-            Settings
-          </StyledNavLink>
-        </NavItem>
-      </NavList>
+      <ThemeToggle onClick={() => dispatch(toggleDarkMode())} $isDark={darkMode}>
+        {darkMode ? 'Light Mode' : 'Dark Mode'}
+        {darkMode ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+      </ThemeToggle>
     </SidebarContainer>
   );
 };

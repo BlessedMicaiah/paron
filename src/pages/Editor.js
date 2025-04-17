@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { 
   Add, 
   Delete, 
@@ -22,7 +23,7 @@ import theme from '../styles/theme';
 import SlidePreview from '../components/editor/SlidePreview';
 import SlideEditor from '../components/editor/SlideEditor';
 import FormatButton from '../components/editor/FormatButton';
-import { usePresentations } from '../context/PresentationContext';
+import { updatePresentation } from '../store/slices/presentationsSlice';
 
 // Default slide template for new presentations
 const defaultSlides = [
@@ -180,52 +181,55 @@ const ToolGroup = styled.div`
 const Editor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getPresentation, updatePresentation } = usePresentations();
+  const dispatch = useDispatch();
+  
+  // Get presentation from Redux store
+  const presentations = useSelector(state => state.presentations.items);
+  const presentation = presentations.find(p => p.id.toString() === id);
   
   const [slides, setSlides] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [title, setTitle] = useState('');
-  const [presentation, setPresentation] = useState(null);
   
   // Load presentation data
   useEffect(() => {
-    const presentationData = getPresentation(id);
-    
-    if (presentationData) {
-      setPresentation(presentationData);
-      setTitle(presentationData.title);
+    if (presentation) {
+      setTitle(presentation.title);
       
       // If this is a new presentation with no slide data yet, add default slides
-      if (!presentationData.slideData) {
+      if (!presentation.slideData) {
         setSlides(defaultSlides);
         // Save the default slides to the presentation
-        updatePresentation(parseInt(id, 10), {
+        dispatch(updatePresentation({
+          id: parseInt(id, 10),
+          title: presentation.title,
           slideData: defaultSlides,
           slides: defaultSlides.length
-        });
+        }));
       } else {
-        setSlides(presentationData.slideData);
+        setSlides(presentation.slideData || []);
       }
     } else {
       // If presentation not found, redirect to dashboard
       navigate('/dashboard');
     }
-  }, [id, getPresentation, navigate, updatePresentation]);
+  }, [id, presentation, navigate, dispatch]);
   
   // Save presentation data when title or slides change
   useEffect(() => {
     if (presentation) {
       const debounce = setTimeout(() => {
-        updatePresentation(parseInt(id, 10), {
+        dispatch(updatePresentation({
+          id: parseInt(id, 10),
           title,
           slideData: slides,
           slides: slides.length
-        });
+        }));
       }, 500);
       
       return () => clearTimeout(debounce);
     }
-  }, [title, slides, id, presentation, updatePresentation]);
+  }, [title, slides, id, presentation, dispatch]);
   
   const addSlide = () => {
     const newSlide = {

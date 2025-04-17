@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Menu, Search, Settings, Help, Notifications, NightlightRound } from '@mui/icons-material';
+import { Search, Settings, Help, Notifications, LightMode } from '@mui/icons-material';
 import theme from '../../styles/theme';
 
 const NavbarContainer = styled.header`
@@ -9,11 +9,11 @@ const NavbarContainer = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: ${theme.spacing.md} ${theme.spacing.xl};
-  background-color: ${theme.colors.white};
+  background-color: rgba(255, 255, 255, 0.9);
   height: 70px;
-  border-bottom: 1px solid ${theme.colors.gray};
+  border-bottom: 1px solid rgba(59, 130, 246, 0.1);
   box-shadow: ${theme.shadows.sm};
-  backdrop-filter: ${theme.glass.backdropFilter};
+  backdrop-filter: blur(10px);
   z-index: 10;
   position: relative;
   
@@ -23,31 +23,21 @@ const NavbarContainer = styled.header`
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 1px;
+    height: 2px;
     background: ${theme.colors.gradient.primary};
+    opacity: 0.2;
   }
 `;
 
-const Logo = styled.div`
-  font-family: ${theme.fonts.heading};
-  font-size: ${theme.fontSizes['2xl']};
-  font-weight: bold;
-  background: ${theme.colors.gradient.primary};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.03em;
-  position: relative;
-  
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    width: 50%;
-    height: 2px;
-    background: ${theme.colors.accent};
-    box-shadow: ${theme.shadows.accent};
-  }
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: ${theme.spacing.lg};
+`;
+
+const LogoImage = styled.img`
+  height: 40px;
+  width: auto;
 `;
 
 const NavActions = styled.div`
@@ -62,7 +52,7 @@ const NavButton = styled.button`
   justify-content: center;
   background: none;
   border: none;
-  color: ${theme.colors.text};
+  color: ${theme.colors.textSecondary};
   width: 42px;
   height: 42px;
   border-radius: ${theme.borderRadius.md};
@@ -77,7 +67,7 @@ const NavButton = styled.button`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(59, 130, 246, 0.08);
     border-radius: ${theme.borderRadius.md};
     transform: scale(0);
     transition: ${theme.transition.normal};
@@ -100,17 +90,19 @@ const NavButton = styled.button`
 const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${theme.colors.surface};
+  background-color: rgba(255, 255, 255, 0.6);
   border-radius: ${theme.borderRadius.full};
   padding: ${theme.spacing.sm} ${theme.spacing.lg};
   margin: 0 ${theme.spacing.xl};
   width: 340px;
   border: 1px solid ${theme.colors.gray};
   transition: ${theme.transition.normal};
+  backdrop-filter: blur(4px);
   
   &:focus-within {
     border-color: ${theme.colors.primary};
-    box-shadow: ${theme.shadows.gold};
+    box-shadow: ${theme.shadows.primary};
+    background-color: rgba(255, 255, 255, 0.9);
   }
 
   input {
@@ -136,23 +128,18 @@ const ProfileButton = styled(NavButton)`
   
   &:hover {
     color: ${theme.colors.white};
-    box-shadow: ${theme.shadows.gold};
+    box-shadow: ${theme.shadows.primary};
   }
 `;
 
 const Navbar = () => {
   return (
     <NavbarContainer>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <NavButton className="pulse">
-          <Menu />
-        </NavButton>
-        <Logo className="gold-text">
-          <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
-            Paron
-          </Link>
-        </Logo>
-      </div>
+      <LogoContainer>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <LogoImage src="/paron-high-resolution-logo.png" alt="Paron Logo" />
+        </Link>
+      </LogoContainer>
 
       <SearchBar>
         <Search style={{ color: theme.colors.primary }} />
@@ -161,7 +148,7 @@ const Navbar = () => {
 
       <NavActions>
         <NavButton>
-          <NightlightRound />
+          <LightMode />
         </NavButton>
         <NavButton>
           <Notifications />

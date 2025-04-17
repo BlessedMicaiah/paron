@@ -10,17 +10,26 @@ const EditorContainer = styled.div`
   align-items: center;
   padding: ${theme.spacing.xl};
   background-color: ${theme.colors.background};
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 20%);
   overflow: auto;
 `;
 
 const SlideContainer = styled.div`
   width: 960px;
   height: 540px;
-  background-color: ${props => props.background || theme.colors.white};
+  background-color: ${props => props.background || theme.colors.surface};
   box-shadow: ${theme.shadows.lg};
   border-radius: ${theme.borderRadius.md};
   position: relative;
   overflow: auto;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  transition: ${theme.transition.normal};
+  
+  &:hover {
+    box-shadow: ${theme.shadows.xl};
+  }
 `;
 
 const EditableContent = styled(ContentEditable)`
@@ -32,11 +41,16 @@ const EditableContent = styled(ContentEditable)`
   h1 {
     font-size: ${theme.fontSizes['5xl']};
     margin-bottom: ${theme.spacing.lg};
+    background: ${theme.colors.gradient.primary};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
   }
   
   h2 {
     font-size: ${theme.fontSizes['3xl']};
     margin-bottom: ${theme.spacing.md};
+    color: ${theme.colors.primary};
   }
   
   h3 {
@@ -47,6 +61,7 @@ const EditableContent = styled(ContentEditable)`
   p {
     font-size: ${theme.fontSizes.lg};
     margin-bottom: ${theme.spacing.md};
+    line-height: 1.6;
   }
   
   ul, ol {
@@ -57,25 +72,61 @@ const EditableContent = styled(ContentEditable)`
   li {
     font-size: ${theme.fontSizes.lg};
     margin-bottom: ${theme.spacing.sm};
+    line-height: 1.6;
   }
   
   table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: ${theme.spacing.md};
+    border-radius: ${theme.borderRadius.sm};
+    overflow: hidden;
   }
   
-  td {
+  td, th {
     border: 1px solid ${theme.colors.gray};
-    padding: ${theme.spacing.sm};
+    padding: ${theme.spacing.md};
+  }
+  
+  th {
+    background-color: rgba(59, 130, 246, 0.05);
+    font-weight: 600;
   }
   
   img {
     max-width: 100%;
+    border-radius: ${theme.borderRadius.sm};
   }
   
   iframe {
     max-width: 100%;
+    border-radius: ${theme.borderRadius.sm};
+    border: none;
+  }
+  
+  blockquote {
+    border-left: 4px solid ${theme.colors.accent};
+    padding-left: ${theme.spacing.md};
+    margin-left: 0;
+    margin-bottom: ${theme.spacing.md};
+    font-style: italic;
+    color: ${theme.colors.textSecondary};
+  }
+  
+  code {
+    font-family: ${theme.fonts.mono};
+    background-color: ${theme.colors.surfaceAlt};
+    padding: ${theme.spacing.xs} ${theme.spacing.sm};
+    border-radius: ${theme.borderRadius.sm};
+    font-size: 0.9em;
+  }
+  
+  pre {
+    background-color: ${theme.colors.surfaceAlt};
+    padding: ${theme.spacing.md};
+    border-radius: ${theme.borderRadius.md};
+    overflow-x: auto;
+    margin-bottom: ${theme.spacing.md};
   }
 `;
 

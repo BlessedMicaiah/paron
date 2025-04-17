@@ -1,23 +1,23 @@
 const theme = {
   colors: {
     primary: '#D4AF37', // Rich gold
-    secondary: '#222222', // Near black
-    accent: '#FFD700', // Bright gold
-    accentAlt: '#C0B283', // Muted gold
-    background: '#FFFFFF', // White background
-    surface: '#F8F8F8', // Very light gray for surfaces
-    surfaceAlt: '#F0F0F0', // Light gray for alternate surfaces
-    text: '#333333', // Dark gray text for contrast on white
-    textSecondary: '#666666', // Medium gray for secondary text
+    secondary: '#9D7E2E', // Darker gold
+    accent: '#F1C232', // Bright gold
+    accentAlt: '#FFD700', // Classic gold
+    background: '#FFFCF0', // Very light gold background
+    surface: '#FFFFFF', // Pure white for surfaces
+    surfaceAlt: '#FFF8E1', // Very light gold for alternate surfaces
+    text: '#3E2F00', // Dark brown text for contrast
+    textSecondary: '#6D5D2A', // Medium brown for secondary text
     white: '#FFFFFF',
-    gray: '#E0E0E0', // Light gray
-    darkGray: '#CCCCCC', // Medium gray
-    success: '#C0B283', // Muted gold for success
-    error: '#B30000', // Deep red
-    warning: '#D4AF37', // Gold for warnings
+    gray: '#E5E7EB', // Light gray
+    darkGray: '#D1D5DB', // Medium gray
+    success: '#B8860B', // Dark goldenrod for success
+    error: '#B22222', // Firebrick red
+    warning: '#CD853F', // Peru (brownish gold) for warnings
     gradient: {
-      primary: 'linear-gradient(135deg, #D4AF37 0%, #9F8C3C 100%)',
-      accent: 'linear-gradient(135deg, #FFD700 0%, #B8860B 100%)',
+      primary: 'linear-gradient(135deg, #D4AF37 0%, #9D7E2E 100%)',
+      accent: 'linear-gradient(135deg, #F1C232 0%, #B8860B 100%)',
     }
   },
   fonts: {
@@ -54,24 +54,23 @@ const theme = {
     '2xl': '1536px',
   },
   shadows: {
-    sm: '0 2px 5px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.08)',
-    md: '0 4px 10px rgba(0, 0, 0, 0.08), 0 2px 5px rgba(0, 0, 0, 0.05)',
-    lg: '0 10px 25px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.06)',
-    xl: '0 20px 40px rgba(0, 0, 0, 0.1)',
-    gold: '0 0 10px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2)',
-    accent: '0 0 10px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.2)',
-    inner: 'inset 0 2px 5px rgba(0, 0, 0, 0.05)',
+    sm: '0 2px 5px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05)',
+    md: '0 4px 10px rgba(0, 0, 0, 0.05), 0 2px 5px rgba(0, 0, 0, 0.03)',
+    lg: '0 10px 25px rgba(212, 175, 55, 0.08), 0 5px 10px rgba(212, 175, 55, 0.04)',
+    xl: '0 20px 40px rgba(212, 175, 55, 0.06)',
+    primary: '0 0 10px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2)',
+    accent: '0 0 10px rgba(241, 194, 50, 0.4), 0 0 20px rgba(241, 194, 50, 0.2)',
   },
   borderRadius: {
     none: '0',
-    sm: '0.25rem',
-    md: '0.5rem',
-    lg: '1rem',
-    xl: '1.5rem',
+    sm: '0.125rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '1rem',
     full: '9999px',
   },
   transition: {
-    fast: 'all 0.2s ease',
+    fast: 'all 0.15s ease',
     normal: 'all 0.3s ease',
     slow: 'all 0.5s ease',
     bounce: 'all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)',
@@ -82,9 +81,9 @@ const theme = {
     lg: 'blur(16px)',
   },
   glass: {
-    background: 'rgba(255, 255, 255, 0.8)',
-    border: '1px solid rgba(212, 175, 55, 0.1)',
-    backdropFilter: 'blur(10px)',
+    background: 'rgba(255, 255, 255, 0.85)',
+    border: '1px solid rgba(59, 130, 246, 0.1)',
+    backdropFilter: 'blur(12px)',
   },
 };
 

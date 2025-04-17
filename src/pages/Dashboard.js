@@ -1,145 +1,190 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
-import theme from '../styles/theme';
+import { useSelector, useDispatch } from 'react-redux';
+import { Add, FilterList, ViewModule, ViewList } from '@mui/icons-material';
 import PresentationCard from '../components/dashboard/PresentationCard';
-import { usePresentations } from '../context/PresentationContext';
+import { addPresentation } from '../store/slices/presentationsSlice';
+import { setFilterBy, setCurrentView } from '../store/slices/uiSlice';
 
-const PageHeader = styled.div`
-  margin-bottom: ${theme.spacing.xl};
+// --- Styled Components ---
+const RecentsHeader = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 16px;
+`;
+
+const ActionButton = styled.button`
+  display: flex;
+  align-items: center;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 16px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.text};
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  transition: box-shadow 0.2s;
+  gap: 8px;
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.09);
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+const FilterBar = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  margin-bottom: 24px;
 `;
 
-const Title = styled.h1`
-  margin-bottom: ${theme.spacing.sm};
-`;
-
-const Subtitle = styled.p`
-  color: ${theme.colors.darkGray};
-  font-size: ${theme.fontSizes.lg};
-`;
-
-const CreateButton = styled.button`
+const FilterGroup = styled.div`
   display: flex;
-  align-items: center;
-  padding: ${theme.spacing.sm} ${theme.spacing.lg};
-  background-color: ${theme.colors.primary};
-  color: ${theme.colors.white};
+  gap: 12px;
+`;
+
+const FilterButton = styled.button`
+  background: ${({ theme, $active }) => $active ? theme.colors.surfaceHover : theme.colors.surface};
   border: none;
-  border-radius: ${theme.borderRadius.md};
-  font-family: ${theme.fonts.body};
-  font-size: ${theme.fontSizes.md};
-  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 15px;
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 500;
   cursor: pointer;
-  
-  svg {
-    margin-right: ${theme.spacing.xs};
-  }
-
+  transition: background 0.2s;
   &:hover {
-    background-color: #4A5BC3;
+    background: ${({ theme }) => theme.colors.surfaceHover};
   }
 `;
 
-const SectionTitle = styled.h2`
-  margin: ${theme.spacing.xl} 0 ${theme.spacing.md};
-  font-size: ${theme.fontSizes.xl};
+const ViewToggle = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
 `;
 
-const EmptyState = styled.div`
+const IconButton = styled.button`
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: ${theme.spacing.xl};
-  background-color: ${theme.colors.white};
-  border-radius: ${theme.borderRadius.lg};
-  box-shadow: ${theme.shadows.sm};
-  text-align: center;
-  
-  h3 {
-    margin: ${theme.spacing.md} 0;
-  }
-  
-  p {
-    color: ${theme.colors.darkGray};
-    margin-bottom: ${theme.spacing.lg};
+  background: ${({ $active, theme }) => $active ? theme.colors.surfaceHover : 'transparent'};
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  color: ${({ theme }) => theme.colors.text};
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: ${({ theme }) => theme.colors.surfaceHover};
   }
 `;
 
-const Dashboard = () => {
-  const { presentations, addPresentation } = usePresentations();
+const CardsGrid = styled.div`
+  display: grid;
+  grid-template-columns: ${({ $view }) => $view === 'grid' ? 'repeat(auto-fill, minmax(340px, 1fr))' : '1fr'};
+  gap: ${({ $view }) => $view === 'grid' ? '32px 24px' : '16px'};
+`;
+
+// --- Main Dashboard Component ---
+function Dashboard() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   
-  const recentPresentations = presentations
-    .filter(p => p.owner === 'You')
-    .sort((a, b) => a.lastEdited < b.lastEdited ? 1 : -1)
-    .slice(0, 4);
-    
-  const teamPresentations = presentations
-    .filter(p => p.owner !== 'You')
-    .sort((a, b) => a.lastEdited < b.lastEdited ? 1 : -1)
-    .slice(0, 4);
-    
+  // Redux state
+  const presentations = useSelector((state) => state.presentations.items);
+  const { filterBy, currentView } = useSelector((state) => state.ui);
+  
+  // Filter presentations based on current filter
+  const filtered = presentations.filter(p => filterBy === 'me' ? p.owner === 'You' : true);
+
+  // Handle creating a new presentation
   const handleCreateNew = () => {
-    const newId = addPresentation({
+    const newId = Date.now();
+    dispatch(addPresentation({
+      id: newId,
       title: 'Untitled Presentation',
-      thumbnail: `https://via.placeholder.com/300x200/${theme.colors.primary.replace('#', '')}/FFFFFF?text=New+Presentation`,
-    });
+      thumbnail: 'https://via.placeholder.com/300x200/586EE0/FFFFFF?text=New+Presentation',
+      lastEdited: new Date().toLocaleString(),
+      owner: 'You',
+      slides: 1,
+      isPrivate: true
+    }));
     navigate(`/editor/${newId}`);
   };
-  
+
   return (
-    <div>
-      <PageHeader>
-        <div>
-          <Title>Welcome to Paron</Title>
-          <Subtitle>Create beautiful presentations that stand out</Subtitle>
-        </div>
-        <CreateButton onClick={handleCreateNew}>
-          <Add />
-          New Presentation
-        </CreateButton>
-      </PageHeader>
-
-      <SectionTitle>Recent Presentations</SectionTitle>
-      {recentPresentations.length > 0 ? (
-        <Grid container spacing={3}>
-          {recentPresentations.map(presentation => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={presentation.id}>
-              <PresentationCard presentation={presentation} />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <EmptyState>
-          <h3>No presentations yet</h3>
-          <p>Create your first presentation to get started</p>
-          <CreateButton onClick={handleCreateNew}>
-            <Add />
-            Create Presentation
-          </CreateButton>
-        </EmptyState>
-      )}
-
-      {teamPresentations.length > 0 && (
-        <>
-          <SectionTitle>Team Presentations</SectionTitle>
-          <Grid container spacing={3}>
-            {teamPresentations.map(presentation => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={presentation.id}>
-                <PresentationCard presentation={presentation} />
-              </Grid>
-            ))}
-          </Grid>
-        </>
-      )}
+    <div style={{ padding: '40px 48px 0 48px', background: 'var(--background-color, #fafbfc)', minHeight: '100vh' }}>
+      <RecentsHeader>
+        <h2 style={{ fontWeight: 700, fontSize: 32, margin: 0 }}>Recents</h2>
+        <Actions>
+          <ActionButton onClick={handleCreateNew}>
+            <Add fontSize="small" />
+            <span style={{ fontWeight: 600 }}>Start new presentation</span>
+          </ActionButton>
+          <ActionButton>
+            <span>Create new room</span>
+          </ActionButton>
+          <ActionButton>
+            <span>Import presentation</span>
+          </ActionButton>
+        </Actions>
+      </RecentsHeader>
+      
+      <FilterBar>
+        <FilterGroup>
+          <FilterButton 
+            $active={filterBy === 'me'} 
+            onClick={() => dispatch(setFilterBy('me'))}
+          >
+            By me
+          </FilterButton>
+          <FilterButton 
+            $active={filterBy === 'everyone'} 
+            onClick={() => dispatch(setFilterBy('everyone'))}
+          >
+            By everyone
+          </FilterButton>
+        </FilterGroup>
+        
+        <ViewToggle>
+          <IconButton 
+            $active={currentView === 'grid'} 
+            onClick={() => dispatch(setCurrentView('grid'))}
+          >
+            <ViewModule fontSize="small" />
+          </IconButton>
+          <IconButton 
+            $active={currentView === 'list'} 
+            onClick={() => dispatch(setCurrentView('list'))}
+          >
+            <ViewList fontSize="small" />
+          </IconButton>
+        </ViewToggle>
+      </FilterBar>
+      
+      <CardsGrid $view={currentView}>
+        {filtered.length === 0 ? (
+          <div style={{ color: '#888', fontSize: 18, gridColumn: '1/-1', textAlign: 'center', marginTop: 80 }}>
+            No presentations found.
+          </div>
+        ) : (
+          filtered.map(p => (
+            <PresentationCard key={p.id} presentation={p} view={currentView} />
+          ))
+        )}
+      </CardsGrid>
     </div>
   );
-};
+}
 
 export default Dashboard;
