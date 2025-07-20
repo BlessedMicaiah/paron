@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { Add } from '@mui/icons-material';
 import theme from '../styles/theme';
 import PresentationCard from '../components/dashboard/PresentationCard';
-import { usePresentations } from '../context/PresentationContext';
+import { addPresentation } from '../store/slices/presentationsSlice';
 
 const PageHeader = styled.div`
-  margin-bottom: ${theme.spacing.xl};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,56 +22,56 @@ const Title = styled.h1`
 const CreateButton = styled.button`
   display: flex;
   align-items: center;
-  padding: ${theme.spacing.sm} ${theme.spacing.lg};
-  background-color: ${theme.colors.primary};
-  color: ${theme.colors.white};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
   border: none;
-  border-radius: ${theme.borderRadius.md};
-  font-family: ${theme.fonts.body};
-  font-size: ${theme.fontSizes.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: ${({ theme }) => theme.fontSizes.md};
   font-weight: bold;
   cursor: pointer;
   
   svg {
-    margin-right: ${theme.spacing.xs};
+    margin-right: ${({ theme }) => theme.spacing.xs};
   }
 
   &:hover {
-    background-color: #4A5BC3;
+    background-color: ${({ theme }) => theme.colors.primaryHover};
   }
 `;
 
 const FilterBar = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: ${theme.spacing.lg};
-  padding-bottom: ${theme.spacing.md};
-  border-bottom: 1px solid ${theme.colors.gray};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.md};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 const FilterButton = styled.button`
-  background-color: ${props => props.active ? theme.colors.primary : theme.colors.white};
-  color: ${props => props.active ? theme.colors.white : theme.colors.text};
-  border: 1px solid ${props => props.active ? theme.colors.primary : theme.colors.gray};
-  border-radius: ${theme.borderRadius.md};
-  padding: ${theme.spacing.xs} ${theme.spacing.md};
-  margin-right: ${theme.spacing.sm};
-  font-size: ${theme.fontSizes.sm};
+  background-color: ${props => props.$active ? props.theme.colors.primary : props.theme.colors.surface};
+  color: ${props => props.$active ? props.theme.colors.white : props.theme.colors.text};
+  border: 1px solid ${props => props.$active ? props.theme.colors.primary : props.theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.md};
+  margin-right: ${({ theme }) => theme.spacing.sm};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
   cursor: pointer;
-  transition: ${theme.transition.fast};
+  transition: ${({ theme }) => theme.transition.fast};
   
   &:hover {
-    background-color: ${props => props.active ? theme.colors.primary : theme.colors.secondary};
+    background-color: ${props => props.$active ? props.theme.colors.primary : props.theme.colors.surfaceHover};
   }
 `;
 
 const SortSelect = styled.select`
   margin-left: auto;
-  padding: ${theme.spacing.xs} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.md};
-  border: 1px solid ${theme.colors.gray};
-  font-size: ${theme.fontSizes.sm};
-  background-color: ${theme.colors.white};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  background-color: ${({ theme }) => theme.colors.surface};
 `;
 
 const EmptyState = styled.div`
@@ -78,34 +79,41 @@ const EmptyState = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: ${theme.spacing.xl};
-  background-color: ${theme.colors.white};
-  border-radius: ${theme.borderRadius.lg};
-  box-shadow: ${theme.shadows.sm};
+  padding: ${({ theme }) => theme.spacing.xl};
+  background-color: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
   text-align: center;
-  margin-top: ${theme.spacing.xl};
+  margin-top: ${({ theme }) => theme.spacing.xl};
   
   h3 {
-    margin: ${theme.spacing.md} 0;
+    margin: ${({ theme }) => theme.spacing.md} 0;
   }
   
   p {
-    color: ${theme.colors.darkGray};
-    margin-bottom: ${theme.spacing.lg};
+    color: ${({ theme }) => theme.colors.textSecondary};
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
   }
 `;
 
 const Presentations = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('lastEdited');
-  const { presentations, addPresentation } = usePresentations();
+  const presentations = useSelector(state => state.presentations.items);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   
   const handleCreateNew = () => {
-    const newId = addPresentation({
+    const newId = Date.now();
+    dispatch(addPresentation({
+      id: newId,
       title: 'Untitled Presentation',
-      thumbnail: `https://via.placeholder.com/300x200/${theme.colors.primary.replace('#', '')}/FFFFFF?text=New+Presentation`,
-    });
+      thumbnail: `https://via.placeholder.com/300x200/D4AF37/FFFFFF?text=New+Presentation`,
+      lastEdited: new Date().toLocaleString(),
+      owner: 'You',
+      slides: 1,
+      isPrivate: true
+    }));
     navigate(`/editor/${newId}`);
   };
   
@@ -153,22 +161,22 @@ const Presentations = () => {
       
       <FilterBar>
         <FilterButton 
-          active={activeFilter === 'all'} 
+          $active={activeFilter === 'all'} 
           onClick={() => setActiveFilter('all')}
         >
           All
         </FilterButton>
         <FilterButton 
-          active={activeFilter === 'recent'} 
+          $active={activeFilter === 'recent'} 
           onClick={() => setActiveFilter('recent')}
         >
-          Created by me
+          My Presentations
         </FilterButton>
         <FilterButton 
-          active={activeFilter === 'shared'} 
+          $active={activeFilter === 'shared'} 
           onClick={() => setActiveFilter('shared')}
         >
-          Shared with me
+          Shared with Me
         </FilterButton>
         
         <SortSelect value={sortOrder} onChange={handleSortChange}>

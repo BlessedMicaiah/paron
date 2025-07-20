@@ -2,20 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Search, Settings, Help, Notifications, LightMode } from '@mui/icons-material';
-import theme from '../../styles/theme';
 
 const NavbarContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: ${theme.spacing.md} ${theme.spacing.xl};
-  background-color: rgba(255, 255, 255, 0.9);
-  height: 70px;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-  box-shadow: ${theme.shadows.sm};
-  backdrop-filter: blur(10px);
-  z-index: 10;
-  position: relative;
+  padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[6]};
+  background: rgba(255, 255, 255, 0.95);
+  height: 72px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  backdrop-filter: blur(20px);
+  z-index: 50;
+  position: sticky;
+  top: 0;
   
   &:after {
     content: '';
@@ -23,16 +23,16 @@ const NavbarContainer = styled.header`
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 2px;
-    background: ${theme.colors.gradient.primary};
-    opacity: 0.2;
+    height: 1px;
+    background: ${({ theme }) => theme.colors.gradient.primary};
+    opacity: 0.3;
   }
 `;
 
 const LogoContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-right: ${theme.spacing.lg};
+  margin-right: ${({ theme }) => theme.spacing.lg};
 `;
 
 const LogoImage = styled.img`
@@ -43,7 +43,7 @@ const LogoImage = styled.img`
 const NavActions = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 const NavButton = styled.button`
@@ -52,11 +52,11 @@ const NavButton = styled.button`
   justify-content: center;
   background: none;
   border: none;
-  color: ${theme.colors.textSecondary};
+  color: ${({ theme }) => theme.colors.textSecondary};
   width: 42px;
   height: 42px;
-  border-radius: ${theme.borderRadius.md};
-  transition: ${theme.transition.bounce};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  transition: ${({ theme }) => theme.transition.bounce};
   position: relative;
   overflow: hidden;
 
@@ -67,14 +67,14 @@ const NavButton = styled.button`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(59, 130, 246, 0.08);
-    border-radius: ${theme.borderRadius.md};
+    background: rgba(99, 102, 241, 0.08);
+    border-radius: ${({ theme }) => theme.borderRadius.md};
     transform: scale(0);
-    transition: ${theme.transition.normal};
+    transition: ${({ theme }) => theme.transition.normal};
   }
 
   &:hover {
-    color: ${theme.colors.primary};
+    color: ${({ theme }) => theme.colors.primary};
     transform: translateY(-2px);
     
     &:before {
@@ -91,17 +91,17 @@ const SearchBar = styled.div`
   display: flex;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.6);
-  border-radius: ${theme.borderRadius.full};
-  padding: ${theme.spacing.sm} ${theme.spacing.lg};
-  margin: 0 ${theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
+  margin: 0 ${({ theme }) => theme.spacing.xl};
   width: 340px;
-  border: 1px solid ${theme.colors.gray};
-  transition: ${theme.transition.normal};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  transition: ${({ theme }) => theme.transition.normal};
   backdrop-filter: blur(4px);
   
   &:focus-within {
-    border-color: ${theme.colors.primary};
-    box-shadow: ${theme.shadows.primary};
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: ${({ theme }) => theme.shadows.primary};
     background-color: rgba(255, 255, 255, 0.9);
   }
 
@@ -110,25 +110,25 @@ const SearchBar = styled.div`
     background: none;
     outline: none;
     width: 100%;
-    font-family: ${theme.fonts.body};
-    font-size: ${theme.fontSizes.md};
-    color: ${theme.colors.text};
-    margin-left: ${theme.spacing.sm};
+    font-family: ${({ theme }) => theme.fonts.body};
+    font-size: ${({ theme }) => theme.fontSizes.md};
+    color: ${({ theme }) => theme.colors.text};
+    margin-left: ${({ theme }) => theme.spacing.sm};
 
     &::placeholder {
-      color: ${theme.colors.textSecondary};
+      color: ${({ theme }) => theme.colors.textSecondary};
     }
   }
 `;
 
 const ProfileButton = styled(NavButton)`
-  background: ${theme.colors.gradient.primary};
-  color: ${theme.colors.white};
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  color: ${({ theme }) => theme.colors.white};
   font-weight: 600;
   
   &:hover {
-    color: ${theme.colors.white};
-    box-shadow: ${theme.shadows.primary};
+    color: ${({ theme }) => theme.colors.white};
+    box-shadow: ${({ theme }) => theme.shadows.primary};
   }
 `;
 
@@ -142,7 +142,7 @@ const Navbar = () => {
       </LogoContainer>
 
       <SearchBar>
-        <Search style={{ color: theme.colors.primary }} />
+        <Search style={{ color: '#6366F1' }} />
         <input placeholder="Search presentations..." />
       </SearchBar>
 

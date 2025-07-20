@@ -1,1 +1,4 @@
 node_modules
+
+# Kiro IDE files
+.kiro/

@@ -86,8 +86,9 @@ const GlobalStyles = createGlobalStyle`
   input, textarea {
     border: 1px solid ${({ theme }) => theme.colors.border};
     border-radius: ${({ theme }) => theme.borderRadius.md};
-    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
     transition: ${({ theme }) => theme.transition.fast};
+    background-color: ${({ theme }) => theme.colors.surface};
     
     &:focus {
       outline: none;
@@ -95,8 +96,18 @@ const GlobalStyles = createGlobalStyle`
       box-shadow: 0 0 0 2px ${({ theme }) => `${theme.colors.primary}33`};
     }
     
+    &:hover:not(:focus) {
+      border-color: ${({ theme }) => theme.colors.borderDark};
+    }
+    
     &::placeholder {
       color: ${({ theme }) => theme.colors.textDisabled};
+    }
+    
+    &:disabled {
+      background-color: ${({ theme }) => theme.colors.grayLight};
+      color: ${({ theme }) => theme.colors.textDisabled};
+      cursor: not-allowed;
     }
   }
 

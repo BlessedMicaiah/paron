@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import theme from '../../styles/theme';
 
 const Button = styled.button`
   display: flex;
@@ -8,18 +7,18 @@ const Button = styled.button`
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: ${props => props.active ? 'rgba(59, 130, 246, 0.1)' : 'transparent'};
+  background: ${props => props.active ? 'rgba(99, 102, 241, 0.1)' : 'transparent'};
   border: none;
-  border-radius: ${theme.borderRadius.md};
-  color: ${props => props.active ? theme.colors.primary : theme.colors.textSecondary};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${props => props.active ? props.theme.colors.primary : props.theme.colors.textSecondary};
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: ${({ theme }) => theme.transition.fast};
   position: relative;
   overflow: hidden;
   
   &:hover {
-    background-color: rgba(59, 130, 246, 0.08);
-    color: ${theme.colors.primary};
+    background-color: rgba(99, 102, 241, 0.08);
+    color: ${({ theme }) => theme.colors.primary};
     transform: translateY(-1px);
   }
   
@@ -32,11 +31,11 @@ const Button = styled.button`
     position: absolute;
     height: 2px;
     width: ${props => props.active ? '80%' : '0'};
-    background: ${theme.colors.gradient.primary};
+    background: ${({ theme }) => theme.colors.gradient.primary};
     bottom: 5px;
     left: 10%;
     transition: width 0.2s ease;
-    border-radius: ${theme.borderRadius.full};
+    border-radius: ${({ theme }) => theme.borderRadius.full};
   }
   
   &:hover::after {
